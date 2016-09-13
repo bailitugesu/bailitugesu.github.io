@@ -4,14 +4,24 @@
   <meta charset="utf-8">
   
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
-  <title>Hexo</title>
+  <title>正则表达式学习 | Hexo</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta property="og:type" content="website">
-<meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+  <meta name="description" content="$$正则表达式$$
+元字符元字符是功能性的匹配符号, 如:\b 单词的开头或结尾，也就是单词的分界处* 匹配任意数量的字符. 匹配除了换行之外的所有字符\d 匹配0到9单个数字\s 匹配任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等\w匹配 字母 或 数字 或 下划线 或 汉字 等^ 匹配字符串的开始$ 匹配字符串的结束
+例子 \ba\w*\b  匹配以字母a开头的单词——先是某">
+<meta property="og:type" content="article">
+<meta property="og:title" content="正则表达式学习">
+<meta property="og:url" content="http://yoursite.com/2016/03/19/正则表达式学习/index.html">
 <meta property="og:site_name" content="Hexo">
+<meta property="og:description" content="$$正则表达式$$
+元字符元字符是功能性的匹配符号, 如:\b 单词的开头或结尾，也就是单词的分界处* 匹配任意数量的字符. 匹配除了换行之外的所有字符\d 匹配0到9单个数字\s 匹配任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等\w匹配 字母 或 数字 或 下划线 或 汉字 等^ 匹配字符串的开始$ 匹配字符串的结束
+例子 \ba\w*\b  匹配以字母a开头的单词——先是某">
+<meta property="og:updated_time" content="2016-03-19T02:39:21.364Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Hexo">
+<meta name="twitter:title" content="正则表达式学习">
+<meta name="twitter:description" content="$$正则表达式$$
+元字符元字符是功能性的匹配符号, 如:\b 单词的开头或结尾，也就是单词的分界处* 匹配任意数量的字符. 匹配除了换行之外的所有字符\d 匹配0到9单个数字\s 匹配任意的空白符，包括空格，制表符(Tab)，换行符，中文全角空格等\w匹配 字母 或 数字 或 下划线 或 汉字 等^ 匹配字符串的开始$ 匹配字符串的结束
+例子 \ba\w*\b  匹配以字母a开头的单词——先是某">
   
     <link rel="alternative" href="/atom.xml" title="Hexo" type="application/atom+xml">
   
@@ -197,186 +207,7 @@
 	</div>
 </nav>
 
-      <div class="body-wrap">
-  
-    <article id="post-express路由" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/04/02/express路由/" class="article-date">
-  	<time datetime="2016-04-02T07:50:14.000Z" itemprop="datePublished">2016-04-02</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
-    
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/04/02/express路由/">express路由</a>
-    </h1>
-  
-
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="1、express-for-node路由route几种实现方式的思考"><a href="#1、express-for-node路由route几种实现方式的思考" class="headerlink" title="1、express for node路由route几种实现方式的思考"></a>1、express for node路由route几种实现方式的思考</h1><hr>
-<h3 id="1-路由实现方式和顺序"><a href="#1-路由实现方式和顺序" class="headerlink" title="1. 路由实现方式和顺序"></a>1. 路由实现方式和顺序</h3><p>express框架创建的模板app,js中默认代码</p>
-<pre><code>var express = require(&apos;express&apos;);
-= var routes = require(&apos;./routes&apos;);
-var user = require(&apos;./routes/user&apos;);
-var http = require(&apos;http&apos;);
-var path = require(&apos;path&apos;);
-var app = express();
-// all environments
-app.set(&apos;port&apos;, process.env.PORT || 3000);
-app.set(&apos;views&apos;, __dirname + &apos;/views&apos;);
-app.set(&apos;view engine&apos;, &apos;ejs&apos;);
-app.use(express.favicon());
-app.use(express.logger(&apos;dev&apos;));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, &apos;public&apos;)));
-// development only
-if (&apos;development&apos; == app.get(&apos;env&apos;)) {
- app.use(express.errorHandler());
-}
-app.get(&apos;/&apos;, routes.index);
-app.get(&apos;/users&apos;, user.list);
-http.createServer(app).listen(app.get(&apos;port&apos;), function(){
-  console.log(&apos;Express server listening on port &apos; + app.get(&apos;port&apos;));
-});
-</code></pre><p>其中以下两句尤其重要，对路由产生影响</p>
-<pre><code>app.use(app.router);  
-app.use(express.static(path.join(__dirname, &apos;public&apos;)));
-</code></pre><p>（1）express.static指定了静态页面的查找目录，如果定义express.static(‘/var/www’)，当用户向node请求<a href="http://server/file.html，node将会自动查找http://server/file.html" target="_blank" rel="external">http://server/file.html，node将会自动查找http://server/file.html</a></p>
-<p>（2）两句的前后顺序决定了当静态页面和动态路由都存在时，哪个决定node的真实路由<br>假设在静态目录下存在test.html，同时包含</p>
-<pre><code> app.get(&apos;/test.html&apos;, function(req, res) {  
-    res.send(&apos;Hello from route handler&apos;);  
-}); 
-</code></pre><h4 id="方式一"><a href="#方式一" class="headerlink" title="方式一"></a>方式一</h4><pre><code>&lt;span style=&quot;font-family:Arial Black;font-size:14px;&quot;&gt;app.use(app.router);  
-app.use(express.static(path.join(__dirname, &apos;public&apos;)));&lt;/span&gt;  
-</code></pre><p>则浏览器看到的结果是Hello from route handler</p>
-<h4 id="方式二"><a href="#方式二" class="headerlink" title="方式二"></a>方式二</h4><pre><code> &lt;p&gt;&lt;span style=&quot;font-size:14px;&quot;&gt;&lt;span style=&quot;font-family:Arial Black;&quot;&gt;&lt;strong&gt;app.use(express.static(path.join(__dirname, &apos;public&apos;)));  
-&lt;/strong&gt;&lt;/span&gt;&lt;span style=&quot;font-family:Arial Black;&quot;&gt;&lt;strong&gt;app.use(app.router);&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;
-</code></pre><p> 则浏览器看到的结果是显示test.html内容</p>
-<h4 id="方式三"><a href="#方式三" class="headerlink" title="方式三"></a>方式三</h4><pre><code> exports.index=function(req,res){  
-    res.render(&apos;index&apos;,{title:&apos;Express&apos;});  
-}  
-exports.index=function(req,res){  
-res.render(&apos;index&apos;,{title:&apos;Express&apos;});}  
-</code></pre><p>同时删除test.html文件<br>则浏览器看到的结果是显示Hello from route handler，说明其实写不写这句，express都是会默认执行的</p>
-<p>express官方推荐的是方式1的写法，之所以这样做，是考虑到性能问题，不论方式2或方式3，都要首先读写磁盘查找文件，没有匹配文件后然后找路由，而方式1，如果有匹配的路由，则不必去查找磁盘，磁盘的IO操作是必然费时效率低下的。</p>
-<h3 id="第二种路由写法"><a href="#第二种路由写法" class="headerlink" title="第二种路由写法"></a>第二种路由写法</h3><p>上述的路由方式，都是写在app.js里，当路由的内容不断增加时，可读性变差<br>所以有了第二种写法：<br>app.js</p>
-<pre><code>var routes = require(&apos;./routes&apos;);  
-app.get(&apos;/&apos;,routes.index); `
-routes/index.js
-exports.index=function(req,res){  
-res.render(&apos;index&apos;,{title:&apos;Express&apos;});  
-}  
-</code></pre><h3 id="3、第三种路由写法（最佳）"><a href="#3、第三种路由写法（最佳）" class="headerlink" title="3、第三种路由写法（最佳）"></a>3、第三种路由写法（最佳）</h3><p>app.js<br><code>routes(app);//最佳</code><br>或者<br><code>app.use(express.router(routes));</code><br>routes/index.js</p>
-<pre><code>module.exports = function(app){  
-  app.get(&apos;/&apos;,function(req,res){  
-    res.render(&apos;index&apos;, { title: &apos;Express&apos; });  
-  });  
-  app.get(&apos;/reg&apos;, function(req, res) {  
-    res.render(&apos;reg&apos;, {  
-      title: &apos;用戶註冊&apos;,  
-    });  
-  });  
-}; 
-</code></pre><p>参考<a href="http://stackoverflow.com/questions/12695591/node-js-express-js-how-does-app-router-work" target="_blank" rel="external">http://stackoverflow.com/questions/12695591/node-js-express-js-how-does-app-router-work</a></p>
-<pre><code>var path = require(&apos;path&apos;);
- var app = express();
-// all environments
-app.set(&apos;port&apos;, process.env.PORT || 3000);
-app.set(&apos;views&apos;, __dirname + &apos;/views&apos;);
-app.set(&apos;view engine&apos;, &apos;ejs&apos;);
-app.use(express.favicon());
-app.use(express.logger(&apos;dev&apos;));
-app.use(express.bodyParser());
-app.use(express.methodOverride());
-app.use(app.router);
-app.use(express.static(path.join(__dirname, &apos;public&apos;)));
-// development only
-if (&apos;development&apos; == app.get(&apos;env&apos;)) {
-  app.use(express.errorHandler());
-}
-app.get(&apos;/&apos;, routes.index);
-app.get(&apos;/users&apos;, user.list);
-http.createServer(app).listen(app.get(&apos;port&apos;), function(){
-  console.log(&apos;Express server listening on port &apos; + app.get(&apos;port&apos;));
-});`
-</code></pre><p>其中以下两句尤其重要，对路由产生影响</p>
-<p><code>app.use(app.router);  
-    app.use(express.static(path.join(__dirname, &#39;public&#39;)));</code>  </p>
-<p>（1）express.static指定了静态页面的查找目录，如果定义express.static(‘/var/www’)，当用户向node请求<a href="http://server/file.html，node将会自动查找http://server/file.html" target="_blank" rel="external">http://server/file.html，node将会自动查找http://server/file.html</a></p>
-<p>（2）两句的前后顺序决定了当静态页面和动态路由都存在时，哪个决定node的真实路由<br>假设在静态目录下存在test.html，同时包含</p>
-<p><code>app.get(&#39;/test.html&#39;, function(req, res) {  
-        res.send(&#39;Hello from route handler&#39;);  
-    });</code></p>
-<h4 id="方式一-1"><a href="#方式一-1" class="headerlink" title="方式一"></a>方式一</h4><p><code>&lt;span style=&quot;font-family:Arial Black;font-size:14px;&quot;&gt;app.use(app.router);  
-    app.use(express.static(path.join(__dirname, &#39;public&#39;)));&lt;/span&gt;</code></p>
-<p>则浏览器看到的结果是Hello from route handler</p>
-<h4 id="方式二-1"><a href="#方式二-1" class="headerlink" title="方式二"></a>方式二</h4><p><code>&lt;p&gt;&lt;span style=&quot;font-size:14px;&quot;&gt;&lt;span style=&quot;font-family:Arial Black;&quot;&gt;&lt;strong&gt;app.use(express.static(path.join(__dirname, &#39;public&#39;)));  
-    &lt;/strong&gt;&lt;/span&gt;&lt;span style=&quot;font-family:Arial Black;&quot;&gt;&lt;strong&gt;app.use(app.router);&lt;/strong&gt;&lt;/span&gt;&lt;/span&gt;&lt;/p&gt;</code></p>
-<p> 则浏览器看到的结果是显示test.html内容</p>
-<h4 id="方式三-1"><a href="#方式三-1" class="headerlink" title="方式三"></a>方式三</h4><p><code>exports.index=function(req,res){  
-        res.render(&#39;index&#39;,{title:&#39;Express&#39;});  
-    }  
-    exports.index=function(req,res){  
-    res.render(&#39;index&#39;,{title:&#39;Express&#39;});}</code></p>
-<p>同时删除test.html文件<br>则浏览器看到的结果是显示Hello from route handler，说明其实写不写这句，express都是会默认执行的</p>
-<p>express官方推荐的是方式1的写法，之所以这样做，是考虑到性能问题，不论方式2或方式3，都要首先读写磁盘查找文件，没有匹配文件后然后找路由，而方式1，如果有匹配的路由，则不必去查找磁盘，磁盘的IO操作是必然费时效率低下的。</p>
-<h3 id="第二种路由写法-1"><a href="#第二种路由写法-1" class="headerlink" title="第二种路由写法"></a>第二种路由写法</h3><p>上述的路由方式，都是写在app.js里，当路由的内容不断增加时，可读性变差<br>所以有了第二种写法：<br>app.js<br>   <code>var routes = require(&#39;./routes&#39;);  
-    app.get(&#39;/&#39;,routes.index);</code><br>routes/index.js<br>    <code>exports.index=function(req,res){  
-        res.render(&#39;index&#39;,{title:&#39;Express&#39;});  
-    }</code></p>
-<h3 id="3、第三种路由写法（最佳）-1"><a href="#3、第三种路由写法（最佳）-1" class="headerlink" title="3、第三种路由写法（最佳）"></a>3、第三种路由写法（最佳）</h3><p>app.js<br><code>routes(app);//最佳</code><br>或者<br><code>app.use(express.router(routes));</code><br>routes/index.js</p>
-<pre><code>module.exports = function(app){  
-  app.get(&apos;/&apos;,function(req,res){  
-    res.render(&apos;index&apos;, { title: &apos;Express&apos; });  
-  });  
-  app.get(&apos;/reg&apos;, function(req, res) {  
-    res.render(&apos;reg&apos;, {  
-      title: &apos;用戶註冊&apos;,  
-    });  
-  });  
-}; 
-</code></pre><p>参考<a href="http://stackoverflow.com/questions/12695591/node-js-express-js-how-does-app-router-work" target="_blank" rel="external">http://stackoverflow.com/questions/12695591/node-js-express-js-how-does-app-router-work</a></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
-  
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-正则表达式学习" class="article article-type-post" itemscope itemprop="blogPost">
+      <div class="body-wrap"><article id="post-正则表达式学习" class="article article-type-post" itemscope itemprop="blogPost">
   
     <div class="article-meta">
       <a href="/2016/03/19/正则表达式学习/" class="article-date">
@@ -392,12 +223,19 @@ http.createServer(app).listen(app.get(&apos;port&apos;), function(){
       <header class="article-header">
         
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/19/正则表达式学习/">正则表达式学习</a>
+    <h1 class="article-title" itemprop="name">
+      正则表达式学习
     </h1>
   
 
       </header>
+      
+      <div class="article-info article-info-post">
+        
+        
+
+        <div class="clearfix"></div>
+      </div>
       
     
     <div class="article-entry" itemprop="articleBody">
@@ -494,92 +332,77 @@ http.createServer(app).listen(app.get(&apos;port&apos;), function(){
       
     </div>
     
-    <div class="article-info article-info-index">
-      
-      
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
   </div>
   
-</article>
-
-
-
-
-
-
-
-
-
-  
-    <article id="post-第一篇博客" class="article article-type-post" itemscope itemprop="blogPost">
-  
-    <div class="article-meta">
-      <a href="/2016/03/03/第一篇博客/" class="article-date">
-  	<time datetime="2016-03-02T17:33:23.000Z" itemprop="datePublished">2016-03-03</time>
-</a>
-    </div>
-  
-  <div class="article-inner">
     
-      <input type="hidden" class="isFancy" />
-    
-    
-      <header class="article-header">
+<nav id="article-nav">
+  
+    <a href="/2016/04/02/express路由/" id="article-nav-newer" class="article-nav-link-wrap">
+      <strong class="article-nav-caption"><</strong>
+      <div class="article-nav-title">
         
+          express路由
+        
+      </div>
+    </a>
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2016/03/03/第一篇博客/">第一篇博客</a>
-    </h1>
   
+    <a href="/2016/03/03/第一篇博客/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">第一篇博客</div>
+      <strong class="article-nav-caption">></strong>
+    </a>
+  
+</nav>
 
-      </header>
-      
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h1 id="为什么要写博客"><a href="#为什么要写博客" class="headerlink" title="$$为什么要写博客$$"></a>$$为什么要写博客$$</h1><hr>
-<ol>
-<li>一直没有写博客的习惯，却一直怀有用博客记录学习和生活的夙愿。</li>
-<li>It’s never too late too start.</li>
-</ol>
-<p>也许不会经常更新，但却也是人生的印记，如若坚持下去，多年后看到肯定确别别有感触吧！</p>
-<p><img src="http://uploads.xuexila.com/allimg/1604/776-160414150Z4163.jpg" alt="cmd-markdown-logo"></p>
-
-      
-    </div>
-    
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/技术/">-技术</a></li></ul>
-	</div>
-
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-    
-  </div>
   
 </article>
 
 
+<div class="share_jia">
+	<!-- JiaThis Button BEGIN -->
+	<div class="jiathis_style">
+		<span class="jiathis_txt">Share to: &nbsp; </span>
+		<a class="jiathis_button_facebook"></a> 
+    <a class="jiathis_button_twitter"></a>
+    <a class="jiathis_button_plus"></a> 
+    <a class="jiathis_button_tsina"></a>
+		<a class="jiathis_button_cqq"></a>
+		<a class="jiathis_button_douban"></a>
+		<a class="jiathis_button_weixin"></a>
+		<a class="jiathis_button_tumblr"></a>
+    <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	</div>
+	<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1405949716054953" charset="utf-8"></script>
+	<!-- JiaThis Button END -->
+</div>
 
 
 
 
 
 
+<div class="duoshuo">
+	<!-- 多说评论框 start -->
+	<div class="ds-thread" data-thread-key="正则表达式学习" data-title="正则表达式学习" data-url="http://yoursite.com/2016/03/19/正则表达式学习/"></div>
+	<!-- 多说评论框 end -->
+	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
+	<script type="text/javascript">
+	var duoshuoQuery = {short_name:"true"};
+	(function() {
+		var ds = document.createElement('script');
+		ds.type = 'text/javascript';ds.async = true;
+		ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+		ds.charset = 'UTF-8';
+		(document.getElementsByTagName('head')[0] 
+		 || document.getElementsByTagName('body')[0]).appendChild(ds);
+	})();
+	</script>
+	<!-- 多说公共JS代码 end -->
+</div>
 
-  
-  
+
+
+
 </div>
       <footer id="footer">
   <div class="outer">
@@ -603,8 +426,8 @@ http.createServer(app).listen(app.get(&apos;port&apos;), function(){
 		fancybox: true,
 		mathjax: true,
 		animate: true,
-		isHome: true,
-		isPost: false,
+		isHome: false,
+		isPost: true,
 		isArchive: false,
 		isTag: false,
 		isCategory: false,
